@@ -40,9 +40,9 @@ async def setup_learner():
             raise
 
 loop = asyncio.get_event_loop()
-# tasks = [asyncio.ensure_future(setup_learner())]
-# learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
-# loop.close()
+tasks = [asyncio.ensure_future(setup_learner())]
+learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
+loop.close()
 
 @app.route('/')
 def index(request):
@@ -54,8 +54,8 @@ async def analyze(request):
     data = await request.form()
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
-#     prediction = learn.predict(img)[0]
-    prediction = 'zingggg!'
+    prediction = learn.predict(img)[0]
+#     prediction = 'zingggg!'
     return JSONResponse({'result': str(prediction)})
 
 if __name__ == '__main__':
