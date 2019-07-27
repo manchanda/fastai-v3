@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
@@ -54,11 +55,13 @@ def index(request):
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
     data = await request.form()
+    fname = data["file"].filename
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction = learn.predict(img)[0]
-#     prediction = 'zingggg!'
+    prediction = learn.predict(img)
     return JSONResponse({'result': str(prediction)})
+    # result = fname + ": " + str(prediction)
+    # return JSONResponse({'result': str(result)})
 
 if __name__ == '__main__':
     if 'serve' in sys.argv: uvicorn.run(app=app, host='0.0.0.0', port=5042)
